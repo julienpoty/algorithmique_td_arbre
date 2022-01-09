@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Algorithmique
 {
     class Arbre
     {
         public string Id { get; set; }
+        public int IdInt { get; set; }
         public List<Arbre> Enfants { get; set; } = new List<Arbre>();
         public Arbre Parent { get; set; }
 
@@ -17,6 +15,7 @@ namespace Algorithmique
             Queue<Arbre> noeudsCourants = new();
             noeudsCourants.Enqueue(arbre);
             List<Arbre> resultat = new();
+
             while (noeudsCourants.Count > 0)
             {
                 Arbre noeudCourant = noeudsCourants.Dequeue();
@@ -29,25 +28,66 @@ namespace Algorithmique
             return resultat;
         }
 
-        public static void DepthFirstSearch(Arbre arbre, List<Arbre> resultat)
+        public static List<Arbre> DepthFirstSearch(Arbre arbre)
+        {
+            List<Arbre> resultat = new();
+
+            return DepthFirstSearchAlgorithm(arbre, resultat);
+        }
+
+        public static List<Arbre> SuffixSearch(Arbre arbre)
+        {
+            List<Arbre> resultat = new();
+
+            return SuffixSearchAlgorithm(arbre, resultat);
+        }
+
+        public static List<Arbre> InfixeSearch(Arbre arbre)
+        {
+            List<Arbre> resultat = new();
+
+            return InfixeSearchAlgorithm(arbre, resultat);
+        }
+
+        /// <summary>
+        /// Implémentation de l'algorithme de parcours en profondeur préfixe.
+        /// </summary>
+        /// <param name="arbre">Noeud appartenant à l'arbre parcouru.</param>
+        /// <param name="resultat">La liste de noeuds issue du parcours.</param>
+        /// <returns>Une liste de noeuds résultant de la recherche préfixe.</returns>
+        private static List<Arbre> DepthFirstSearchAlgorithm(Arbre arbre, List<Arbre> resultat)
         {
             resultat.Add(arbre);
             foreach (Arbre enfant in arbre.Enfants)
             {
-                DepthFirstSearch(enfant, resultat);
+                DepthFirstSearchAlgorithm(enfant, resultat);
             }
+            return resultat;
         }
 
-        public static void SuffixSearch(Arbre arbre, List<Arbre> resultat)
+        /// <summary>
+        /// Implémentation de l'algorithme de parcours en profondeur suffixe.
+        /// </summary>
+        /// <param name="arbre">Noeud appartenant à l'arbre parcouru.</param>
+        /// <param name="resultat">La liste de noeuds issue du parcours.</param>
+        /// <returns>Une liste de noeuds résultant de la recherche suffixe.</returns>
+        private static List<Arbre> SuffixSearchAlgorithm(Arbre arbre, List<Arbre> resultat)
         {
             foreach (Arbre enfant in arbre.Enfants)
             {
-                DepthFirstSearch(enfant, resultat);
+                SuffixSearchAlgorithm(enfant, resultat);
             }
             resultat.Add(arbre);
+            return resultat;
         }
 
-        public static void InfixeSearch(Arbre arbre, List<Arbre> resultat)
+        /// <summary>
+        /// Implémentation de l'algorithme de parcours en profondeur infixe.
+        /// </summary>
+        /// <param name="arbre">Noeud appartenant à l'arbre parcouru.</param>
+        /// <param name="resultat">La liste de noeuds issue du parcours.</param>
+        /// <returns>Une liste de noeuds résultant de la recherche infixe.</returns>
+        private static List<Arbre> InfixeSearchAlgorithm(Arbre arbre, List<Arbre> resultat)
         {
             if (arbre.Enfants.Count > 2)
             {
@@ -55,12 +95,14 @@ namespace Algorithmique
             }
 
             if (arbre.Enfants.Count > 0)
-                InfixeSearch(arbre.Enfants[0], resultat);
+                InfixeSearchAlgorithm(arbre.Enfants[0], resultat);
 
             resultat.Add(arbre);
 
             if (arbre.Enfants.Count > 1)
-                InfixeSearch(arbre.Enfants[1], resultat);
+                InfixeSearchAlgorithm(arbre.Enfants[1], resultat);
+
+            return resultat;
         }
     }
 }
